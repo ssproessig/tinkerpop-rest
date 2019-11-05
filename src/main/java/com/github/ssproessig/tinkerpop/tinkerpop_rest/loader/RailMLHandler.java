@@ -31,6 +31,7 @@ public class RailMLHandler extends DefaultHandler {
     v.property(name, value != null ? value : defValue);
   }
 
+  @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
     if ("netElement".equals(localName)) {
@@ -76,6 +77,7 @@ public class RailMLHandler extends DefaultHandler {
 
   }
 
+  @Override
   public void endElement(String uri, String localName, String qName) {
 
     if ("level".equals(localName)) {
