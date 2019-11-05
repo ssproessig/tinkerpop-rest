@@ -3,11 +3,8 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphDumper;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphHelpers;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
@@ -18,14 +15,7 @@ public class RailMLHandler extends DefaultHandler {
 
   private final TinkerGraph g;
 
-  private Vertex currentNetwork;
-  private Vertex currentLevel;
-
-  private Vertex currentNetRelation;
-  private String positionOnA;
-  private String positionOnB;
-
-  private Map<String, Vertex> networkResources = new HashMap<>();
+  private Context ctx = new Context();
 
   RailMLHandler(TinkerGraph graph) {
     g = graph;
@@ -42,11 +32,11 @@ public class RailMLHandler extends DefaultHandler {
       netElement.property(Constants.EXT_ID, extId);
       GraphHelpers.addPropertyFromAttributes(netElement, attributes, "length", "");
 
-      networkResources.put(extId, netElement);
+      ctx.networkResources.put(extId, netElement);
 
       val netElementBegin = g.addVertex("netElementBegin");
       netElementBegin.property(Constants.EXT_ID, extId + "_0");
-      networkResources.put(extId + "_0", netElementBegin);
+      ctx.networkResources.put(extId + "_0", netElementBegin);
 
       netElement.addEdge("beginsAt", netElementBegin);
       netElementBegin.addEdge("beginOf", netElement);
@@ -54,7 +44,7 @@ public class RailMLHandler extends DefaultHandler {
       val netElementEnd = g.addVertex("netElementEnd");
       netElementEnd.property(Constants.EXT_ID, extId);
       netElementEnd.property(Constants.EXT_ID, extId + "_1");
-      networkResources.put(extId + "_1", netElementEnd);
+      ctx.networkResources.put(extId + "_1", netElementEnd);
 
       netElement.addEdge("endsAt", netElementEnd);
       netElementEnd.addEdge("endOf", netElement);
@@ -63,64 +53,64 @@ public class RailMLHandler extends DefaultHandler {
     }
 
     if ("netRelation".equals(localName)) {
-      currentNetRelation = g.addVertex("netRelation");
-      currentNetRelation.property(Constants.EXT_ID, extId);
+      ctx.currentNetRelation = g.addVertex("netRelation");
+      ctx.currentNetRelation.property(Constants.EXT_ID, extId);
       GraphHelpers.addPropertyFromAttributes(
-          currentNetRelation, attributes, "navigability", "<no-navigability>");
+          ctx.currentNetRelation, attributes, "navigability", "<no-navigability>");
 
-      positionOnA = attributes.getValue("positionOnA");
-      positionOnB = attributes.getValue("positionOnB");
+      ctx.positionOnA = attributes.getValue("positionOnA");
+      ctx.positionOnB = attributes.getValue("positionOnB");
 
-      networkResources.put(extId, currentNetRelation);
+      ctx.networkResources.put(extId, ctx.currentNetRelation);
       return;
     }
 
-    if ("elementA".equals(localName) && currentNetRelation != null) {
-      val ref = attributes.getValue("ref") + "_" + positionOnA;
-      val res = networkResources.get(ref);
+    if ("elementA".equals(localName) && ctx.currentNetRelation != null) {
+      val ref = attributes.getValue("ref") + "_" + ctx.positionOnA;
+      val res = ctx.networkResources.get(ref);
 
       if (res != null) {
-        currentNetRelation.addEdge("connects", res);
-        res.addEdge("connects", currentNetRelation);
+        ctx.currentNetRelation.addEdge("connects", res);
+        res.addEdge("connects", ctx.currentNetRelation);
       } else {
         log.error("missing networkResource '{}'", ref);
       }
     }
 
-    if ("elementB".equals(localName) && currentNetRelation != null) {
-      val ref = attributes.getValue("ref") + "_" + positionOnB;
-      val res = networkResources.get(ref);
+    if ("elementB".equals(localName) && ctx.currentNetRelation != null) {
+      val ref = attributes.getValue("ref") + "_" + ctx.positionOnB;
+      val res = ctx.networkResources.get(ref);
 
       if (res != null) {
-        res.addEdge("connects", currentNetRelation);
-        currentNetRelation.addEdge("connects", res);
+        res.addEdge("connects", ctx.currentNetRelation);
+        ctx.currentNetRelation.addEdge("connects", res);
       } else {
         log.error("missing networkResource '{}'", ref);
       }
     }
 
     if ("network".equals(localName)) {
-      currentNetwork = g.addVertex("network");
-      currentNetwork.property(Constants.EXT_ID, extId);
+      ctx.currentNetwork = g.addVertex("network");
+      ctx.currentNetwork.property(Constants.EXT_ID, extId);
       return;
     }
 
-    if ("level".equals(localName) && currentNetwork != null) {
-      currentLevel = g.addVertex("level");
-      currentLevel.property(Constants.EXT_ID, extId);
+    if ("level".equals(localName) && ctx.currentNetwork != null) {
+      ctx.currentLevel = g.addVertex("level");
+      ctx.currentLevel.property(Constants.EXT_ID, extId);
       GraphHelpers.addPropertyFromAttributes(
-          currentLevel, attributes, "descriptionLevel", "<no-descriptionLevel>");
+          ctx.currentLevel, attributes, "descriptionLevel", "<no-descriptionLevel>");
 
-      currentNetwork.addEdge("level", currentLevel);
+      ctx.currentNetwork.addEdge("level", ctx.currentLevel);
       return;
     }
 
-    if ("networkResource".equals(localName) && currentLevel != null) {
+    if ("networkResource".equals(localName) && ctx.currentLevel != null) {
       val ref = attributes.getValue("ref");
-      val res = networkResources.get(ref);
+      val res = ctx.networkResources.get(ref);
 
       if (res != null) {
-        currentLevel.addEdge("networkResource", res);
+        ctx.currentLevel.addEdge("networkResource", res);
       } else {
         log.error("missing networkResource '{}'", ref);
       }
@@ -132,15 +122,15 @@ public class RailMLHandler extends DefaultHandler {
   public void endElement(String uri, String localName, String qName) {
 
     if ("level".equals(localName)) {
-      currentLevel = null;
+      ctx.currentLevel = null;
     }
 
     if ("network".equals(localName)) {
-      currentNetwork = null;
+      ctx.currentNetwork = null;
     }
 
     if ("netRelation".equals(localName)) {
-      currentNetRelation = null;
+      ctx.currentNetRelation = null;
     }
 
   }
