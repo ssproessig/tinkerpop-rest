@@ -13,13 +13,6 @@ public class GraphHelpers {
 
   public void addPropertyFromAttributes(Vertex v, Attributes a, String name, String defValue) {
     val value = a.getValue(name);
-
-    // it is strongly discouraged to use "id" as property as it is up to the TinkerPop implementation
-    // to use it itself internally — hence we rename the railML "id" to "extId" for externalId
-    if ("id".equals(name)) {
-      name = Constants.EXT_ID;
-    }
-
     v.property(name, value != null ? value : defValue);
   }
 
