@@ -35,11 +35,29 @@ public class RailMLHandler extends DefaultHandler {
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
     if ("netElement".equals(localName)) {
+      val id = attributes.getValue("id");
       val netElement = g.addVertex("netElement");
       addPropertyFromAttributes(netElement, attributes, "id", "<no-id>");
       addPropertyFromAttributes(netElement, attributes, "length", "");
 
-      networkResources.put(attributes.getValue("id"), netElement);
+      networkResources.put(id, netElement);
+
+      val netElementBegin = g.addVertex("netElementBegin");
+      addPropertyFromAttributes(netElementBegin, attributes, "id", "<no-id>");
+      netElementBegin.property("id", id + "_0");
+      networkResources.put(id + "_0", netElementBegin);
+
+      netElement.addEdge("beginsAt", netElementBegin);
+      netElementBegin.addEdge("beginOf", netElement);
+
+      val netElementEnd = g.addVertex("netElementEnd");
+      addPropertyFromAttributes(netElementEnd, attributes, "id", "<no-id>");
+      netElementEnd.property("id", id + "_1");
+      networkResources.put(id + "_1", netElementEnd);
+
+      netElement.addEdge("endsAt", netElementEnd);
+      netElementEnd.addEdge("endOf", netElement);
+
       return;
     }
 
