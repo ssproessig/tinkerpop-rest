@@ -24,7 +24,7 @@ class NetworkLevelInfo {
     descriptionLevel = v.property("descriptionLevel").value().toString();
 
     if (shallAddResources) {
-      v.vertices(Direction.BOTH, "networkResource").forEachRemaining(
+      v.vertices(Direction.BOTH, Constants.NETWORK_RESOURCE_EDGE).forEachRemaining(
           r -> networkResources.add(r.property(Constants.EXT_ID).value().toString())
       );
     }

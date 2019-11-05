@@ -19,4 +19,6 @@ public class Constants {
 
   public static final String CONNECTS_EDGE = "connects";
 
+  public static final String NETWORK_RESOURCE_EDGE = "networkResource";
+
 }
