@@ -13,10 +13,17 @@ class NetworkLevelInfo {
 
   private String id;
   private String descriptionLevel;
+  private List<String> networkResources = new ArrayList<>();
 
-  NetworkLevelInfo(Vertex v) {
+  NetworkLevelInfo(Vertex v, boolean shallAddResources) {
     id = v.property(Constants.EXT_ID).value().toString();
     descriptionLevel = v.property("descriptionLevel").value().toString();
+
+    if (shallAddResources) {
+      v.vertices(Direction.BOTH, "networkResource").forEachRemaining(
+          r -> networkResources.add(r.property(Constants.EXT_ID).value().toString())
+      );
+    }
   }
 }
 
@@ -27,11 +34,11 @@ class Network {
   private String id;
   private List<NetworkLevelInfo> levels = new ArrayList<>();
 
-  Network(Vertex v) {
+  Network(Vertex v, boolean shallAddResources) {
     id = v.property(Constants.EXT_ID).value().toString();
 
     v.edges(Direction.BOTH, "level").forEachRemaining(
-        edge -> levels.add(new NetworkLevelInfo(edge.inVertex()))
+        edge -> levels.add(new NetworkLevelInfo(edge.inVertex(), shallAddResources))
     );
   }
 
