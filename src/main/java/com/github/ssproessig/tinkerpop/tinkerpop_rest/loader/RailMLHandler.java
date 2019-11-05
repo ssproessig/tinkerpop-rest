@@ -19,6 +19,11 @@ public class RailMLHandler extends DefaultHandler {
 
   private Vertex currentNetwork;
   private Vertex currentLevel;
+
+  private Vertex currentNetRelation;
+  private String positionOnA;
+  private String positionOnB;
+
   private Map<String, Vertex> networkResources = new HashMap<>();
 
 
@@ -62,9 +67,40 @@ public class RailMLHandler extends DefaultHandler {
     }
 
     if ("netRelation".equals(localName)) {
-      val netRelation = g.addVertex("netRelation");
-      addPropertyFromAttributes(netRelation, attributes, "id", "<no-id>");
+      currentNetRelation = g.addVertex("netRelation");
+      addPropertyFromAttributes(currentNetRelation, attributes, "id", "<no-id>");
+      addPropertyFromAttributes(currentNetRelation, attributes, "navigability",
+          "<no-navigability>");
+
+      positionOnA = attributes.getValue("positionOnA");
+      positionOnB = attributes.getValue("positionOnB");
+
+      networkResources.put(attributes.getValue("id"), currentNetRelation);
       return;
+    }
+
+    if ("elementA".equals(localName) && currentNetRelation != null) {
+      val ref = attributes.getValue("ref") + "_" + positionOnA;
+      val res = networkResources.get(ref);
+
+      if (res != null) {
+        currentNetRelation.addEdge("connects", res);
+        res.addEdge("connects", currentNetRelation);
+      } else {
+        log.error("missing networkResource '{}'", ref);
+      }
+    }
+
+    if ("elementB".equals(localName) && currentNetRelation != null) {
+      val ref = attributes.getValue("ref") + "_" + positionOnB;
+      val res = networkResources.get(ref);
+
+      if (res != null) {
+        res.addEdge("connects", currentNetRelation);
+        currentNetRelation.addEdge("connects", res);
+      } else {
+        log.error("missing networkResource '{}'", ref);
+      }
     }
 
     if ("network".equals(localName)) {
@@ -104,6 +140,10 @@ public class RailMLHandler extends DefaultHandler {
 
     if ("network".equals(localName)) {
       currentNetwork = null;
+    }
+
+    if ("netRelation".equals(localName)) {
+      currentNetRelation = null;
     }
 
   }
