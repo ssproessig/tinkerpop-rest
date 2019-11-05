@@ -1,4 +1,4 @@
-package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
+package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.context.infrastructure;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.apache.tinkerpop.gremlin.structure.Vertex;
 
 
 @Slf4j
-public class Context {
+public class TopologyContext {
 
   public Map<String, Vertex> networkResources = new HashMap<>();
 
@@ -19,8 +19,6 @@ public class Context {
   public Vertex currentNetRelation;
   public String positionOnA;
   public String positionOnB;
-
-  public FunctionalInfrastructureContext fi = new FunctionalInfrastructureContext();
 
   public Optional<Vertex> lookupNetworkResource(String ref) {
     val res = networkResources.get(ref);

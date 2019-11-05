@@ -17,16 +17,16 @@ public class NetElementHandler extends BaseHandler {
     val extId = attributes.getValue("id");
     val netElement = GraphHelpers.createVertex(g, localName, extId);
     GraphHelpers.addPropertyFromAttributes(netElement, attributes, "length", "");
-    ctx.networkResources.put(extId, netElement);
+    ctx.top.networkResources.put(extId, netElement);
 
     val netElementBegin = GraphHelpers.createVertex(g, localName + "Begin", extId + "_0");
-    ctx.networkResources.put(extId + "_0", netElementBegin);
+    ctx.top.networkResources.put(extId + "_0", netElementBegin);
 
     netElement.addEdge("beginsAt", netElementBegin);
     netElementBegin.addEdge("beginOf", netElement);
 
     val netElementEnd = GraphHelpers.createVertex(g, localName + "End", extId + "_1");
-    ctx.networkResources.put(extId + "_1", netElementEnd);
+    ctx.top.networkResources.put(extId + "_1", netElementEnd);
 
     netElement.addEdge("endsAt", netElementEnd);
     netElementEnd.addEdge("endOf", netElement);

@@ -22,7 +22,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class RailMLHandler extends DefaultHandler {
 
   private final TinkerGraph g;
-  private Context ctx;
+  private BaseContext ctx;
 
   private List<BaseHandler> handlers = Arrays.asList(
       // /railML/infrastructure/topology
@@ -37,7 +37,7 @@ public class RailMLHandler extends DefaultHandler {
 
   RailMLHandler(TinkerGraph graph) {
     g = graph;
-    ctx = new Context();
+    ctx = new BaseContext();
 
     handlers.forEach(h -> h.setReferences(g, ctx));
   }

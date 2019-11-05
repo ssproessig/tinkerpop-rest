@@ -13,11 +13,11 @@ public class NetworkHandler extends BaseHandler {
 
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
-    ctx.currentNetwork = GraphHelpers.createVertex(g, localName, attributes.getValue("id"));
+    ctx.top.currentNetwork = GraphHelpers.createVertex(g, localName, attributes.getValue("id"));
   }
 
   @Override
   public void endElement(String uri, String localName, String qName) {
-    ctx.currentNetwork = null;
+    ctx.top.currentNetwork = null;
   }
 }

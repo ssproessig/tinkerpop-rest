@@ -53,9 +53,9 @@ public class SwitchHandler extends BaseHandler {
   public void endElement(String uri, String localName, String qName) {
     if (ELEMENT_NAME.equals(localName)) {
       // FIXME: lacks error handling if using invalid reference
-      val tipRef = ctx.lookupNetworkResource(ctx.fi.switchTipRef);
-      val leftRelRef = ctx.lookupNetworkResource(ctx.fi.switchLeftRelationRef);
-      val rightRelRef = ctx.lookupNetworkResource(ctx.fi.switchRightRelationRef);
+      val tipRef = ctx.top.lookupNetworkResource(ctx.fi.switchTipRef);
+      val leftRelRef = ctx.top.lookupNetworkResource(ctx.fi.switchLeftRelationRef);
+      val rightRelRef = ctx.top.lookupNetworkResource(ctx.fi.switchRightRelationRef);
 
       if (tipRef.isPresent() && leftRelRef.isPresent() && rightRelRef.isPresent()) {
         float f = NumberUtils.toFloat(ctx.fi.tipPosOnNetElement, 0.0f);

@@ -8,14 +8,14 @@ public abstract class BaseHandler extends DefaultHandler {
 
   private String elementName;
 
-  protected Context ctx;
+  protected BaseContext ctx;
   protected TinkerGraph g;
 
   protected BaseHandler(String elementNameToHandle) {
     elementName = elementNameToHandle;
   }
 
-  void setReferences(TinkerGraph graphToUse, Context ctxToUse) {
+  void setReferences(TinkerGraph graphToUse, BaseContext ctxToUse) {
     ctx = ctxToUse;
     g = graphToUse;
   }

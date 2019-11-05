@@ -13,8 +13,8 @@ public class NetworkResourceHandler extends BaseHandler {
 
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
-    ctx.lookupNetworkResource(attributes.getValue("ref")).ifPresent(
-        res -> ctx.currentLevel.addEdge(localName, res)
+    ctx.top.lookupNetworkResource(attributes.getValue("ref")).ifPresent(
+        res -> ctx.top.currentLevel.addEdge(localName, res)
     );
   }
 

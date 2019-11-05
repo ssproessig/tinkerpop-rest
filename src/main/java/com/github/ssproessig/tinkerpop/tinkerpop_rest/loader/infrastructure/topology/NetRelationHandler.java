@@ -30,22 +30,22 @@ public class NetRelationHandler extends BaseHandler {
     if (ELEMENT_NAME.equals(localName)) {
       val extId = attributes.getValue("id");
 
-      ctx.currentNetRelation = GraphHelpers.createVertex(g, localName, extId);
+      ctx.top.currentNetRelation = GraphHelpers.createVertex(g, localName, extId);
       GraphHelpers.addPropertyFromAttributes(
-          ctx.currentNetRelation, attributes, "navigability", "<no-navigability>");
+          ctx.top.currentNetRelation, attributes, "navigability", "<no-navigability>");
 
-      ctx.positionOnA = attributes.getValue("positionOnA");
-      ctx.positionOnB = attributes.getValue("positionOnB");
+      ctx.top.positionOnA = attributes.getValue("positionOnA");
+      ctx.top.positionOnB = attributes.getValue("positionOnB");
 
-      ctx.networkResources.put(extId, ctx.currentNetRelation);
-    } else if (localName.startsWith("element") && ctx.currentNetRelation != null) {
+      ctx.top.networkResources.put(extId, ctx.top.currentNetRelation);
+    } else if (localName.startsWith("element") && ctx.top.currentNetRelation != null) {
       val refToLookup = attributes.getValue("ref") + "_" +
           ("elementA".equals(localName) ? "0" : "1");
 
-      ctx.lookupNetworkResource(refToLookup).ifPresent(
+      ctx.top.lookupNetworkResource(refToLookup).ifPresent(
           res -> {
-            ctx.currentNetRelation.addEdge(Constants.CONNECTS_EDGE, res);
-            res.addEdge(Constants.CONNECTS_EDGE, ctx.currentNetRelation);
+            ctx.top.currentNetRelation.addEdge(Constants.CONNECTS_EDGE, res);
+            res.addEdge(Constants.CONNECTS_EDGE, ctx.top.currentNetRelation);
           }
       );
     }
@@ -54,7 +54,7 @@ public class NetRelationHandler extends BaseHandler {
   @Override
   public void endElement(String uri, String localName, String qName) {
     if (ELEMENT_NAME.equals(localName)) {
-      ctx.currentNetRelation = null;
+      ctx.top.currentNetRelation = null;
     }
   }
 

@@ -13,17 +13,17 @@ public class NetworkLevelHandler extends BaseHandler {
 
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
-    ctx.currentLevel = GraphHelpers.createVertex(g, localName, attributes.getValue("id"));
+    ctx.top.currentLevel = GraphHelpers.createVertex(g, localName, attributes.getValue("id"));
 
     GraphHelpers.addPropertyFromAttributes(
-        ctx.currentLevel, attributes, "descriptionLevel", "<no-descriptionLevel>");
+        ctx.top.currentLevel, attributes, "descriptionLevel", "<no-descriptionLevel>");
 
-    ctx.currentNetwork.addEdge(localName, ctx.currentLevel);
+    ctx.top.currentNetwork.addEdge(localName, ctx.top.currentLevel);
   }
 
   @Override
   public void endElement(String uri, String localName, String qName) {
-    ctx.currentLevel = null;
+    ctx.top.currentLevel = null;
   }
 
 }

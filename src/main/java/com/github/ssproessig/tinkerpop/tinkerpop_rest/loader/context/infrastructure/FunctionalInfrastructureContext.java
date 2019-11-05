@@ -1,4 +1,4 @@
-package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
+package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.context.infrastructure;
 
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
