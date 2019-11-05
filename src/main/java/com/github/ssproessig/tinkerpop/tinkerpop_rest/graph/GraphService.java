@@ -5,7 +5,6 @@ import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.RailMLLoader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.xml.parsers.ParserConfigurationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
@@ -43,7 +42,7 @@ public class GraphService {
       log.error("Unable to derive url for {} given: {}", Constants.ENV_TO_USE, urlGiven);
       log.error(ExceptionUtils.getStackTrace(e));
       System.exit(1);
-    } catch (ParserConfigurationException | IOException | SAXException e) {
+    } catch (IOException | SAXException e) {
       log.error("Parsing '{}' failed:", urlGiven);
       log.error(ExceptionUtils.getStackTrace(e));
       System.exit(2);
