@@ -2,6 +2,7 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphDumper;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphHelpers;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -26,22 +27,10 @@ public class RailMLHandler extends DefaultHandler {
 
   private Map<String, Vertex> networkResources = new HashMap<>();
 
-
   RailMLHandler(TinkerGraph graph) {
     g = graph;
   }
 
-  private void addPropertyFromAttributes(Vertex v, Attributes a, String name, String defValue) {
-    val value = a.getValue(name);
-
-    // it is strongly discouraged to use "id" as property as it is up to the TinkerPop implementation
-    // to use it itself internally — hence we rename the railML "id" to "extId" for externalId
-    if ("id".equals(name)) {
-      name = Constants.EXT_ID;
-    }
-
-    v.property(name, value != null ? value : defValue);
-  }
 
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
@@ -51,7 +40,7 @@ public class RailMLHandler extends DefaultHandler {
     if ("netElement".equals(localName)) {
       val netElement = g.addVertex("netElement");
       netElement.property(Constants.EXT_ID, extId);
-      addPropertyFromAttributes(netElement, attributes, "length", "");
+      GraphHelpers.addPropertyFromAttributes(netElement, attributes, "length", "");
 
       networkResources.put(extId, netElement);
 
@@ -76,8 +65,8 @@ public class RailMLHandler extends DefaultHandler {
     if ("netRelation".equals(localName)) {
       currentNetRelation = g.addVertex("netRelation");
       currentNetRelation.property(Constants.EXT_ID, extId);
-      addPropertyFromAttributes(currentNetRelation, attributes, "navigability",
-          "<no-navigability>");
+      GraphHelpers.addPropertyFromAttributes(
+          currentNetRelation, attributes, "navigability", "<no-navigability>");
 
       positionOnA = attributes.getValue("positionOnA");
       positionOnB = attributes.getValue("positionOnB");
@@ -119,7 +108,8 @@ public class RailMLHandler extends DefaultHandler {
     if ("level".equals(localName) && currentNetwork != null) {
       currentLevel = g.addVertex("level");
       currentLevel.property(Constants.EXT_ID, extId);
-      addPropertyFromAttributes(currentLevel, attributes, "descriptionLevel", "<no>");
+      GraphHelpers.addPropertyFromAttributes(
+          currentLevel, attributes, "descriptionLevel", "<no-descriptionLevel>");
 
       currentNetwork.addEdge("level", currentLevel);
       return;
