@@ -15,4 +15,6 @@ public class Constants {
   public static final String EXPORT_GRAPHML_TO =
       System.getProperty("java.io.tmpdir") + "current_railML_import.graphml";
 
+  public static final String EXT_ID = "extId";
+
 }

@@ -1,5 +1,6 @@
 package com.github.ssproessig.tinkerpop.tinkerpop_rest.rest.infrastructure.topology;
 
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphService;
 import java.time.Duration;
 import java.time.Instant;
@@ -32,7 +33,7 @@ public class NetElementPathsController {
 
 
   private Vertex getNetElement(String id) {
-    return service.V().hasLabel("netElement").has("id", id).tryNext()
+    return service.V().hasLabel("netElement").has(Constants.EXT_ID, id).tryNext()
         .orElseThrow(() -> new NetElementNotFoundException(id));
   }
 

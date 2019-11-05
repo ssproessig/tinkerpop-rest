@@ -33,32 +33,39 @@ public class RailMLHandler extends DefaultHandler {
 
   private void addPropertyFromAttributes(Vertex v, Attributes a, String name, String defValue) {
     val value = a.getValue(name);
+
+    // it is strongly discouraged to use "id" as property as it is up to the TinkerPop implementation
+    // to use it itself internally — hence we rename the railML "id" to "extId" for externalId
+    if ("id".equals(name)) {
+      name = Constants.EXT_ID;
+    }
+
     v.property(name, value != null ? value : defValue);
   }
 
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
+    val extId = attributes.getValue("id");
+
     if ("netElement".equals(localName)) {
-      val id = attributes.getValue("id");
       val netElement = g.addVertex("netElement");
-      addPropertyFromAttributes(netElement, attributes, "id", "<no-id>");
+      netElement.property(Constants.EXT_ID, extId);
       addPropertyFromAttributes(netElement, attributes, "length", "");
 
-      networkResources.put(id, netElement);
+      networkResources.put(extId, netElement);
 
       val netElementBegin = g.addVertex("netElementBegin");
-      addPropertyFromAttributes(netElementBegin, attributes, "id", "<no-id>");
-      netElementBegin.property("id", id + "_0");
-      networkResources.put(id + "_0", netElementBegin);
+      netElementBegin.property(Constants.EXT_ID, extId + "_0");
+      networkResources.put(extId + "_0", netElementBegin);
 
       netElement.addEdge("beginsAt", netElementBegin);
       netElementBegin.addEdge("beginOf", netElement);
 
       val netElementEnd = g.addVertex("netElementEnd");
-      addPropertyFromAttributes(netElementEnd, attributes, "id", "<no-id>");
-      netElementEnd.property("id", id + "_1");
-      networkResources.put(id + "_1", netElementEnd);
+      netElementEnd.property(Constants.EXT_ID, extId);
+      netElementEnd.property(Constants.EXT_ID, extId + "_1");
+      networkResources.put(extId + "_1", netElementEnd);
 
       netElement.addEdge("endsAt", netElementEnd);
       netElementEnd.addEdge("endOf", netElement);
@@ -68,14 +75,14 @@ public class RailMLHandler extends DefaultHandler {
 
     if ("netRelation".equals(localName)) {
       currentNetRelation = g.addVertex("netRelation");
-      addPropertyFromAttributes(currentNetRelation, attributes, "id", "<no-id>");
+      currentNetRelation.property(Constants.EXT_ID, extId);
       addPropertyFromAttributes(currentNetRelation, attributes, "navigability",
           "<no-navigability>");
 
       positionOnA = attributes.getValue("positionOnA");
       positionOnB = attributes.getValue("positionOnB");
 
-      networkResources.put(attributes.getValue("id"), currentNetRelation);
+      networkResources.put(extId, currentNetRelation);
       return;
     }
 
@@ -105,13 +112,13 @@ public class RailMLHandler extends DefaultHandler {
 
     if ("network".equals(localName)) {
       currentNetwork = g.addVertex("network");
-      addPropertyFromAttributes(currentNetwork, attributes, "id", "<no-id>");
+      currentNetwork.property(Constants.EXT_ID, extId);
       return;
     }
 
     if ("level".equals(localName) && currentNetwork != null) {
       currentLevel = g.addVertex("level");
-      addPropertyFromAttributes(currentLevel, attributes, "id", "<no-id>");
+      currentLevel.property(Constants.EXT_ID, extId);
       addPropertyFromAttributes(currentLevel, attributes, "descriptionLevel", "<no>");
 
       currentNetwork.addEdge("level", currentLevel);

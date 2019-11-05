@@ -1,5 +1,6 @@
 package com.github.ssproessig.tinkerpop.tinkerpop_rest.rest.infrastructure.topology;
 
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -17,7 +18,7 @@ class NetElementPath {
 
     for (Object pp : p) {
       val v = (Vertex) pp;
-      elements.add(v.property("id").value().toString());
+      elements.add(v.property(Constants.EXT_ID).value().toString());
     }
 
   }
