@@ -20,6 +20,8 @@ public class Context {
   public String positionOnA;
   public String positionOnB;
 
+  public FunctionalInfrastructureContext fi = new FunctionalInfrastructureContext();
+
   public Optional<Vertex> lookupNetworkResource(String ref) {
     val res = networkResources.get(ref);
 

@@ -3,7 +3,7 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
 
-public class SwitchISContext {
+public class FunctionalInfrastructureContext {
 
   public Vertex currentSwitch;
 
