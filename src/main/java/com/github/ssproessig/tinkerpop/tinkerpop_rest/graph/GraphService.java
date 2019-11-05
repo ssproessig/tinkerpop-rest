@@ -50,8 +50,8 @@ public class GraphService {
     }
   }
 
-  public GraphTraversal<Vertex, Vertex> V() {
-    return gts.V();
+  public GraphTraversal<Vertex, Vertex> V(final Object... vertexIds) {
+    return gts.V(vertexIds);
   }
 
 }
