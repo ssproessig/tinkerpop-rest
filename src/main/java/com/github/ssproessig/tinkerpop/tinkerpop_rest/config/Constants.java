@@ -17,4 +17,6 @@ public class Constants {
 
   public static final String EXT_ID = "extId";
 
+  public static final String CONNECTS_EDGE = "connects";
+
 }

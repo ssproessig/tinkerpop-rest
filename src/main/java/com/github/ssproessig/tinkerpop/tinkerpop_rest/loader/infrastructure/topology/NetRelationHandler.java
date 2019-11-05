@@ -1,5 +1,6 @@
 package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology;
 
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphHelpers;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.BaseHandler;
 import lombok.val;
@@ -43,8 +44,8 @@ public class NetRelationHandler extends BaseHandler {
 
       ctx.lookupNetworkResource(refToLookup).ifPresent(
           res -> {
-            ctx.currentNetRelation.addEdge("connects", res);
-            res.addEdge("connects", ctx.currentNetRelation);
+            ctx.currentNetRelation.addEdge(Constants.CONNECTS_EDGE, res);
+            res.addEdge(Constants.CONNECTS_EDGE, ctx.currentNetRelation);
           }
       );
     }
