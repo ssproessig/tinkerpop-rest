@@ -2,9 +2,13 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
 
+@Slf4j
 public class Context {
 
   public Map<String, Vertex> networkResources = new HashMap<>();
@@ -16,4 +20,13 @@ public class Context {
   public String positionOnA;
   public String positionOnB;
 
+  public Optional<Vertex> lookupNetworkResource(String ref) {
+    val res = networkResources.get(ref);
+
+    if (res == null) {
+      log.error("missing networkResource '{}'", ref);
+    }
+
+    return Optional.ofNullable(res);
+  }
 }

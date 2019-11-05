@@ -2,11 +2,18 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphDumper;
-import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphHelpers;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetElementHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetRelationHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetworkHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetworkLevelHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetworkResourceHandler;
+import java.util.Arrays;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 
@@ -14,116 +21,46 @@ import org.xml.sax.helpers.DefaultHandler;
 public class RailMLHandler extends DefaultHandler {
 
   private final TinkerGraph g;
+  private Context ctx;
 
-  private Context ctx = new Context();
+  private List<BaseHandler> handlers = Arrays.asList(
+      new NetElementHandler()
+      , new NetRelationHandler()
+      , new NetworkHandler()
+      , new NetworkLevelHandler()
+      , new NetworkResourceHandler()
+  );
 
   RailMLHandler(TinkerGraph graph) {
     g = graph;
+    ctx = new Context();
+
+    handlers.forEach(h -> h.setReferences(g, ctx));
   }
 
 
   @Override
-  public void startElement(String uri, String localName, String qName, Attributes attributes) {
+  public void startElement(String uri, String localName, String qName, Attributes attributes)
+      throws SAXException {
 
-    val extId = attributes.getValue("id");
-
-    if ("netElement".equals(localName)) {
-      val netElement = GraphHelpers.createVertex(g, localName, extId);
-      GraphHelpers.addPropertyFromAttributes(netElement, attributes, "length", "");
-      ctx.networkResources.put(extId, netElement);
-
-      val netElementBegin = GraphHelpers.createVertex(g, localName + "Begin", extId + "_0");
-      ctx.networkResources.put(extId + "_0", netElementBegin);
-
-      netElement.addEdge("beginsAt", netElementBegin);
-      netElementBegin.addEdge("beginOf", netElement);
-
-      val netElementEnd = GraphHelpers.createVertex(g, localName + "End", extId + "_1");
-      ctx.networkResources.put(extId + "_1", netElementEnd);
-
-      netElement.addEdge("endsAt", netElementEnd);
-      netElementEnd.addEdge("endOf", netElement);
-
-      return;
-    }
-
-    if ("netRelation".equals(localName)) {
-      ctx.currentNetRelation = GraphHelpers.createVertex(g, localName, extId);
-      GraphHelpers.addPropertyFromAttributes(
-          ctx.currentNetRelation, attributes, "navigability", "<no-navigability>");
-
-      ctx.positionOnA = attributes.getValue("positionOnA");
-      ctx.positionOnB = attributes.getValue("positionOnB");
-
-      ctx.networkResources.put(extId, ctx.currentNetRelation);
-      return;
-    }
-
-    if ("elementA".equals(localName) && ctx.currentNetRelation != null) {
-      val ref = attributes.getValue("ref") + "_" + ctx.positionOnA;
-      val res = ctx.networkResources.get(ref);
-
-      if (res != null) {
-        ctx.currentNetRelation.addEdge("connects", res);
-        res.addEdge("connects", ctx.currentNetRelation);
-      } else {
-        log.error("missing networkResource '{}'", ref);
-      }
-    }
-
-    if ("elementB".equals(localName) && ctx.currentNetRelation != null) {
-      val ref = attributes.getValue("ref") + "_" + ctx.positionOnB;
-      val res = ctx.networkResources.get(ref);
-
-      if (res != null) {
-        res.addEdge("connects", ctx.currentNetRelation);
-        ctx.currentNetRelation.addEdge("connects", res);
-      } else {
-        log.error("missing networkResource '{}'", ref);
-      }
-    }
-
-    if ("network".equals(localName)) {
-      ctx.currentNetwork = GraphHelpers.createVertex(g, localName, extId);
-      return;
-    }
-
-    if ("level".equals(localName) && ctx.currentNetwork != null) {
-      ctx.currentLevel = GraphHelpers.createVertex(g, localName, extId);
-
-      GraphHelpers.addPropertyFromAttributes(
-          ctx.currentLevel, attributes, "descriptionLevel", "<no-descriptionLevel>");
-
-      ctx.currentNetwork.addEdge("level", ctx.currentLevel);
-      return;
-    }
-
-    if ("networkResource".equals(localName) && ctx.currentLevel != null) {
-      val ref = attributes.getValue("ref");
-      val res = ctx.networkResources.get(ref);
-
-      if (res != null) {
-        ctx.currentLevel.addEdge("networkResource", res);
-      } else {
-        log.error("missing networkResource '{}'", ref);
+    for (val handler : handlers) {
+      if (handler.doesHandle(localName)) {
+        handler.startElement(uri, localName, qName, attributes);
+        break;
       }
     }
 
   }
 
   @Override
-  public void endElement(String uri, String localName, String qName) {
+  public void endElement(String uri, String localName, String qName)
+      throws SAXException {
 
-    if ("level".equals(localName)) {
-      ctx.currentLevel = null;
-    }
-
-    if ("network".equals(localName)) {
-      ctx.currentNetwork = null;
-    }
-
-    if ("netRelation".equals(localName)) {
-      ctx.currentNetRelation = null;
+    for (val handler : handlers) {
+      if (handler.doesHandle(localName)) {
+        handler.endElement(uri, localName, qName);
+        break;
+      }
     }
 
   }
