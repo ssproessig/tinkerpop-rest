@@ -1,13 +1,12 @@
 package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphDumper;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.apache.tinkerpop.gremlin.structure.io.graphson.GraphSONIo;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
@@ -89,19 +88,9 @@ public class RailMLHandler extends DefaultHandler {
 
   }
 
+  @Override
   public void endDocument() {
-    logGraph(g);
-  }
-
-
-  private void logGraph(TinkerGraph graph) {
-    try {
-      val os = new ByteArrayOutputStream();
-      graph.io(GraphSONIo.build()).writer().create().writeGraph(os, graph);
-      log.info(os.toString());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    GraphDumper.dumpTo(g, Constants.EXPORT_GRAPHML_TO);
   }
 
 }
