@@ -1,5 +1,7 @@
 package com.github.ssproessig.tinkerpop.tinkerpop_rest.rest.infrastructure.topology;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ class NetworkLevelInfo {
 
   private String id;
   private String descriptionLevel;
+
+  @JsonInclude(Include.NON_EMPTY)
   private List<String> networkResources = new ArrayList<>();
 
   NetworkLevelInfo(Vertex v, boolean shallAddResources) {
