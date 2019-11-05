@@ -4,6 +4,7 @@ import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.xml.sax.Attributes;
 
 
@@ -20,6 +21,12 @@ public class GraphHelpers {
     }
 
     v.property(name, value != null ? value : defValue);
+  }
+
+  public Vertex createVertex(TinkerGraph g, String label, String extId) {
+    val vertex = g.addVertex(label);
+    vertex.property(Constants.EXT_ID, extId);
+    return vertex;
   }
 
 }

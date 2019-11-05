@@ -28,22 +28,17 @@ public class RailMLHandler extends DefaultHandler {
     val extId = attributes.getValue("id");
 
     if ("netElement".equals(localName)) {
-      val netElement = g.addVertex("netElement");
-      netElement.property(Constants.EXT_ID, extId);
+      val netElement = GraphHelpers.createVertex(g, localName, extId);
       GraphHelpers.addPropertyFromAttributes(netElement, attributes, "length", "");
-
       ctx.networkResources.put(extId, netElement);
 
-      val netElementBegin = g.addVertex("netElementBegin");
-      netElementBegin.property(Constants.EXT_ID, extId + "_0");
+      val netElementBegin = GraphHelpers.createVertex(g, localName + "Begin", extId + "_0");
       ctx.networkResources.put(extId + "_0", netElementBegin);
 
       netElement.addEdge("beginsAt", netElementBegin);
       netElementBegin.addEdge("beginOf", netElement);
 
-      val netElementEnd = g.addVertex("netElementEnd");
-      netElementEnd.property(Constants.EXT_ID, extId);
-      netElementEnd.property(Constants.EXT_ID, extId + "_1");
+      val netElementEnd = GraphHelpers.createVertex(g, localName + "End", extId + "_1");
       ctx.networkResources.put(extId + "_1", netElementEnd);
 
       netElement.addEdge("endsAt", netElementEnd);
@@ -53,8 +48,7 @@ public class RailMLHandler extends DefaultHandler {
     }
 
     if ("netRelation".equals(localName)) {
-      ctx.currentNetRelation = g.addVertex("netRelation");
-      ctx.currentNetRelation.property(Constants.EXT_ID, extId);
+      ctx.currentNetRelation = GraphHelpers.createVertex(g, localName, extId);
       GraphHelpers.addPropertyFromAttributes(
           ctx.currentNetRelation, attributes, "navigability", "<no-navigability>");
 
@@ -90,14 +84,13 @@ public class RailMLHandler extends DefaultHandler {
     }
 
     if ("network".equals(localName)) {
-      ctx.currentNetwork = g.addVertex("network");
-      ctx.currentNetwork.property(Constants.EXT_ID, extId);
+      ctx.currentNetwork = GraphHelpers.createVertex(g, localName, extId);
       return;
     }
 
     if ("level".equals(localName) && ctx.currentNetwork != null) {
-      ctx.currentLevel = g.addVertex("level");
-      ctx.currentLevel.property(Constants.EXT_ID, extId);
+      ctx.currentLevel = GraphHelpers.createVertex(g, localName, extId);
+
       GraphHelpers.addPropertyFromAttributes(
           ctx.currentLevel, attributes, "descriptionLevel", "<no-descriptionLevel>");
 
