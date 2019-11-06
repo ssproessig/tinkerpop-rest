@@ -18,6 +18,20 @@ You can use the environment variable `RAILML_TO_LOAD` to point the application t
 
 If nothing is configured the application defaults to loading the official [railML 3.1 sample](https://svn.railml.org/railML3/tags/railML-3.1-final/examples/railML.org_SimpleExample_v11_railML3-1_04.xml).
 
+### Fixing "SunCertPathBuilderException" when loading the official railML 3.1 sample
+How to solve the exception `sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`.
+
+The official railML 3.1 sample is provided via `https://`. It may be that your Java keystore does not yet trust the intermediate CA certificate used to sign `*.railml.org`.
+
+To fix this:
+- use your browser to open the link
+- view the certificate chain used
+- export e.g. the missing `AlphaSSL CA - SHA256 - G2` to `alphassl_ca_SHA256_G2.cer` file (using _DER encoded binary_)
+- import the certificate into your JREs default keystore (default password is `changeit`)
+```
+> keytool -import -keystore c:\_\jdk1.8.0_202\jre\lib\security\cacerts -file e:\temp\alphassl_ca_SHA256_G2.cer
+``` 
+
 ### Graph created
 The graph created from parsing the railML file is persisted to the temporary directory as GraphML file named `current_railML_import.graphml`. 
 
