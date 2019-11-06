@@ -2,12 +2,12 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphDumper;
-import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.functional_infrastructure.SwitchHandler;
-import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetElementHandler;
-import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetRelationHandler;
-import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetworkHandler;
-import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetworkLevelHandler;
-import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.infrastructure.topology.NetworkResourceHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.functional_infrastructure.SwitchHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology.NetElementHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology.NetRelationHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology.NetworkHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology.NetworkLevelHandler;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology.NetworkResourceHandler;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
