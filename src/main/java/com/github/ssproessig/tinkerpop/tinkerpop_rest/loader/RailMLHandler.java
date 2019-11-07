@@ -2,6 +2,7 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.config.Constants;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphDumper;
+import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.functional_infrastructure.BufferStopHandler;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.functional_infrastructure.SwitchHandler;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology.NetElementHandler;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology.NetRelationHandler;
@@ -31,6 +32,7 @@ public class RailMLHandler extends DefaultHandler {
           new NetworkLevelHandler(),
           new NetworkResourceHandler(),
           // /railML/infrastructure/topology
+          new BufferStopHandler(),
           new SwitchHandler());
 
   RailMLHandler(TinkerGraph graph) {
