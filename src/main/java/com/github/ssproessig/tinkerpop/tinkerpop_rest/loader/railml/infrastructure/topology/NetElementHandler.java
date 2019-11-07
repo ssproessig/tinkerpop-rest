@@ -1,4 +1,4 @@
-package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railML.infrastructure.topology;
+package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.railml.infrastructure.topology;
 
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphHelpers;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.BaseHandler;
