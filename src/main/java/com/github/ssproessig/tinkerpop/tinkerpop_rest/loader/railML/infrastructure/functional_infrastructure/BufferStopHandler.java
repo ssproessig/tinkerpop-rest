@@ -31,6 +31,7 @@ public class BufferStopHandler extends BaseHandler {
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
     if (ELEMENT_NAME.equals(localName)) {
       currentBufferStop = GraphHelpers.createVertex(g, localName, attributes.getValue("id"));
+      GraphHelpers.addPropertyFromAttributes(currentBufferStop, attributes, "type", "");
     }
     //
     else if ("spotLocation".equals(localName)) {
