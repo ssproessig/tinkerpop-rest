@@ -5,7 +5,10 @@ import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.RailMLLoader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
@@ -34,10 +37,16 @@ public class GraphService {
     }
 
     try {
-      URL url = new URL(urlGiven);
-
       log.info("Reading railML 3.1 from {}", urlGiven);
+
+      val start = Instant.now();
+      URL url = new URL(urlGiven);
       RailMLLoader.loadFrom(url, g);
+
+      val end = Instant.now();
+      log.info("...reading populating the graph took {} ms",
+          Duration.between(start, end).toMillis()
+      );
     } catch (MalformedURLException e) {
       log.error("Unable to derive url for {} given: {}", Constants.ENV_TO_USE, urlGiven);
       log.error(ExceptionUtils.getStackTrace(e));
