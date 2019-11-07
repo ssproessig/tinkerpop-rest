@@ -17,23 +17,21 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 @Slf4j
 public class RailMLHandler extends DefaultHandler {
-
   private final TinkerGraph g;
   private BaseContext ctx;
 
-  private List<BaseHandler> handlers = Arrays.asList(
-      // /railML/infrastructure/topology
-      new NetElementHandler()
-      , new NetRelationHandler()
-      , new NetworkHandler()
-      , new NetworkLevelHandler()
-      , new NetworkResourceHandler()
-      // /railML/infrastructure/topology
-      , new SwitchHandler()
-  );
+  private List<BaseHandler> handlers =
+      Arrays.asList(
+          // /railML/infrastructure/topology
+          new NetElementHandler(),
+          new NetRelationHandler(),
+          new NetworkHandler(),
+          new NetworkLevelHandler(),
+          new NetworkResourceHandler(),
+          // /railML/infrastructure/topology
+          new SwitchHandler());
 
   RailMLHandler(TinkerGraph graph) {
     g = graph;
@@ -41,7 +39,6 @@ public class RailMLHandler extends DefaultHandler {
 
     handlers.forEach(h -> h.setReferences(g, ctx));
   }
-
 
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes)
@@ -53,12 +50,10 @@ public class RailMLHandler extends DefaultHandler {
         break;
       }
     }
-
   }
 
   @Override
-  public void endElement(String uri, String localName, String qName)
-      throws SAXException {
+  public void endElement(String uri, String localName, String qName) throws SAXException {
 
     for (val handler : handlers) {
       if (handler.doesHandle(localName)) {
@@ -66,12 +61,10 @@ public class RailMLHandler extends DefaultHandler {
         break;
       }
     }
-
   }
 
   @Override
   public void endDocument() {
     GraphDumper.dumpTo(g, Constants.EXPORT_GRAPHML_TO);
   }
-
 }

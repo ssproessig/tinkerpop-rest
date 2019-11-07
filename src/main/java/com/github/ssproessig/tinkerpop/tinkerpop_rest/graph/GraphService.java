@@ -17,11 +17,9 @@ import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
-
 @Service
 @Slf4j
 public class GraphService {
-
   private TinkerGraph g;
   private GraphTraversalSource gts;
 
@@ -32,8 +30,8 @@ public class GraphService {
     String urlGiven = System.getenv(Constants.ENV_TO_USE);
     if (urlGiven == null) {
       urlGiven = Constants.RAILML_EXAMPLE_URL;
-      log.info("Environment variable {} not set. Defaulting to railML example.",
-          Constants.ENV_TO_USE);
+      log.info(
+          "Environment variable {} not set. Defaulting to railML example.", Constants.ENV_TO_USE);
     }
 
     try {
@@ -44,9 +42,8 @@ public class GraphService {
       RailMLLoader.loadFrom(url, g);
 
       val end = Instant.now();
-      log.info("...reading populating the graph took {} ms",
-          Duration.between(start, end).toMillis()
-      );
+      log.info(
+          "...reading populating the graph took {} ms", Duration.between(start, end).toMillis());
     } catch (MalformedURLException e) {
       log.error("Unable to derive url for {} given: {}", Constants.ENV_TO_USE, urlGiven);
       log.error(ExceptionUtils.getStackTrace(e));
@@ -61,5 +58,4 @@ public class GraphService {
   public GraphTraversal<Vertex, Vertex> V(final Object... vertexIds) {
     return gts.V(vertexIds);
   }
-
 }

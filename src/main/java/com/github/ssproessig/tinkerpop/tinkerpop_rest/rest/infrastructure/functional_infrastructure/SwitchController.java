@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/infrastructure/functional-infrastructure/")
 public class SwitchController {
-
   private final GraphService service;
 
   public SwitchController(GraphService service) {

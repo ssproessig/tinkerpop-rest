@@ -4,9 +4,7 @@ import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphHelpers;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.BaseHandler;
 import org.xml.sax.Attributes;
 
-
 public class NetworkHandler extends BaseHandler {
-
   public NetworkHandler() {
     super("network");
   }

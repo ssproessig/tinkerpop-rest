@@ -4,9 +4,7 @@ import com.github.ssproessig.tinkerpop.tinkerpop_rest.graph.GraphHelpers;
 import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.BaseHandler;
 import org.xml.sax.Attributes;
 
-
 public class NetworkLevelHandler extends BaseHandler {
-
   public NetworkLevelHandler() {
     super("level");
   }
@@ -25,5 +23,4 @@ public class NetworkLevelHandler extends BaseHandler {
   public void endElement(String uri, String localName, String qName) {
     ctx.top.currentLevel = null;
   }
-
 }

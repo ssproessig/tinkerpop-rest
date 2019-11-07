@@ -3,9 +3,7 @@ package com.github.ssproessig.tinkerpop.tinkerpop_rest.loader;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 public abstract class BaseHandler extends DefaultHandler {
-
   private String elementName;
 
   protected BaseContext ctx;
@@ -23,5 +21,4 @@ public abstract class BaseHandler extends DefaultHandler {
   protected boolean doesHandle(String localName) {
     return (elementName.equals(localName));
   }
-
 }

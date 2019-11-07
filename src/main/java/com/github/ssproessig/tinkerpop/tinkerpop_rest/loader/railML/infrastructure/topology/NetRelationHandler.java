@@ -7,14 +7,11 @@ import lombok.val;
 import org.apache.commons.lang.ArrayUtils;
 import org.xml.sax.Attributes;
 
-
 public class NetRelationHandler extends BaseHandler {
-
   private static final String ELEMENT_NAME = "netRelation";
 
-  private static final String[] HANDLED_ELEMENTS = new String[]{
-      ELEMENT_NAME, "elementA", "elementB"
-  };
+  private static final String[] HANDLED_ELEMENTS =
+      new String[] {ELEMENT_NAME, "elementA", "elementB"};
 
   public NetRelationHandler() {
     super(ELEMENT_NAME);
@@ -39,15 +36,16 @@ public class NetRelationHandler extends BaseHandler {
 
       ctx.top.networkResources.put(extId, ctx.top.currentNetRelation);
     } else if (localName.startsWith("element") && ctx.top.currentNetRelation != null) {
-      val refToLookup = attributes.getValue("ref") + "_" +
-          ("elementA".equals(localName) ? "0" : "1");
+      val refToLookup =
+          attributes.getValue("ref") + "_" + ("elementA".equals(localName) ? "0" : "1");
 
-      ctx.top.lookupNetworkResource(refToLookup).ifPresent(
-          res -> {
-            ctx.top.currentNetRelation.addEdge(Constants.CONNECTS_EDGE, res);
-            res.addEdge(Constants.CONNECTS_EDGE, ctx.top.currentNetRelation);
-          }
-      );
+      ctx.top
+          .lookupNetworkResource(refToLookup)
+          .ifPresent(
+              res -> {
+                ctx.top.currentNetRelation.addEdge(Constants.CONNECTS_EDGE, res);
+                res.addEdge(Constants.CONNECTS_EDGE, ctx.top.currentNetRelation);
+              });
     }
   }
 
@@ -57,5 +55,4 @@ public class NetRelationHandler extends BaseHandler {
       ctx.top.currentNetRelation = null;
     }
   }
-
 }

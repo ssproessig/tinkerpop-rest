@@ -8,10 +8,8 @@ import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.xml.sax.Attributes;
 
-
 @UtilityClass
 public class GraphHelpers {
-
   public void addPropertyFromAttributes(Vertex v, Attributes a, String name, String defValue) {
     val value = a.getValue(name);
     v.property(name, value != null ? value : defValue);
@@ -35,5 +33,4 @@ public class GraphHelpers {
 
     return null;
   }
-
 }

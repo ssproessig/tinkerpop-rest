@@ -7,10 +7,8 @@ import java.util.List;
 import lombok.Data;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
-
 @Data
 class Switch {
-
   private String type;
   private String id;
   private List<SwitchBranch> branches = new ArrayList<>();
@@ -22,5 +20,4 @@ class Switch {
     branches.add(new SwitchBranch(Type.LEFT, v));
     branches.add(new SwitchBranch(Type.RIGHT, v));
   }
-
 }

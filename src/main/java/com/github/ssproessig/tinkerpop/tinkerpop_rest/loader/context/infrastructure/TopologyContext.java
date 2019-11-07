@@ -7,10 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
-
 @Slf4j
 public class TopologyContext {
-
   public Map<String, Vertex> networkResources = new HashMap<>();
 
   public Vertex currentNetwork;

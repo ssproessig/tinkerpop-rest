@@ -5,9 +5,7 @@ import com.github.ssproessig.tinkerpop.tinkerpop_rest.loader.BaseHandler;
 import lombok.val;
 import org.xml.sax.Attributes;
 
-
 public class NetElementHandler extends BaseHandler {
-
   public NetElementHandler() {
     super("netElement");
   }
@@ -31,5 +29,4 @@ public class NetElementHandler extends BaseHandler {
     netElement.addEdge("endsAt", netElementEnd);
     netElementEnd.addEdge("endOf", netElement);
   }
-
 }

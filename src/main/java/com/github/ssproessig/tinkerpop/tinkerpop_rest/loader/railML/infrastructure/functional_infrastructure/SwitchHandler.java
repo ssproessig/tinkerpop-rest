@@ -8,14 +8,10 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.tinkerpop.gremlin.structure.Direction;
 import org.xml.sax.Attributes;
 
-
 public class SwitchHandler extends BaseHandler {
-
   private static final String ELEMENT_NAME = "switchIS";
-
-  private static final String[] ALSO_HANDLED_ELEMENTS = new String[]{
-      "spotLocation", "leftBranch", "rightBranch"
-  };
+  private static final String[] ALSO_HANDLED_ELEMENTS =
+      new String[] {"spotLocation", "leftBranch", "rightBranch"};
 
   public SwitchHandler() {
     super(ELEMENT_NAME);
@@ -23,10 +19,8 @@ public class SwitchHandler extends BaseHandler {
 
   @Override
   protected boolean doesHandle(String localName) {
-    return ((localName.equals(ELEMENT_NAME)) ||
-        (ctx.fi.currentSwitch != null && ArrayUtils
-            .contains(ALSO_HANDLED_ELEMENTS, localName))
-    );
+    return ((localName.equals(ELEMENT_NAME))
+        || (ctx.fi.currentSwitch != null && ArrayUtils.contains(ALSO_HANDLED_ELEMENTS, localName)));
   }
 
   @Override
@@ -34,16 +28,16 @@ public class SwitchHandler extends BaseHandler {
     if (ELEMENT_NAME.equals(localName)) {
       ctx.fi.currentSwitch = GraphHelpers.createVertex(g, "switch", attributes.getValue("id"));
     }
-//
+    //
     else if ("spotLocation".equals(localName)) {
       ctx.fi.switchTipRef = attributes.getValue("netElementRef");
       ctx.fi.tipPosOnNetElement = attributes.getValue("pos");
     }
-//
+    //
     else if ("leftBranch".equals(localName)) {
       ctx.fi.switchLeftRelationRef = attributes.getValue("netRelationRef");
     }
-//
+    //
     else if ("rightBranch".equals(localName)) {
       ctx.fi.switchRightRelationRef = attributes.getValue("netRelationRef");
     }
@@ -74,6 +68,4 @@ public class SwitchHandler extends BaseHandler {
       ctx.fi.currentSwitch = null;
     }
   }
-
-
 }

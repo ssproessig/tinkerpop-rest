@@ -19,30 +19,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/infrastructure/topology/")
 @Slf4j
 public class NetElementPathsController {
-
   private final GraphService service;
 
   public NetElementPathsController(GraphService service) {
     this.service = service;
   }
 
-
   private Vertex getNetElement(String id) {
-    return service.V().hasLabel("netElement").has(Constants.EXT_ID, id).tryNext()
+    return service
+        .V()
+        .hasLabel("netElement")
+        .has(Constants.EXT_ID, id)
+        .tryNext()
         .orElseThrow(() -> new NetElementNotFoundException(id));
   }
 
-
   @GetMapping(value = "net-element-paths", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public List<NetElementPath> get(
-      @RequestParam @NotNull String fromNetElement,
-      @RequestParam @NotNull String toNetElement
-  ) {
+      @RequestParam @NotNull String fromNetElement, @RequestParam @NotNull String toNetElement) {
     val fromVertex = getNetElement(fromNetElement);
     val toVertex = getNetElement(toNetElement);
 
@@ -50,17 +48,23 @@ public class NetElementPathsController {
 
     List<Path> list = new ArrayList<>();
 
-    service.V(fromVertex.id()).
-        until(__.hasId(toVertex.id()).or().loops().is(100)).
-        repeat(__.out().simplePath()).
-        hasId(toVertex.id()).limit(2).path().fill(list);
+    service
+        .V(fromVertex.id())
+        .until(__.hasId(toVertex.id()).or().loops().is(100))
+        .repeat(__.out().simplePath())
+        .hasId(toVertex.id())
+        .limit(2)
+        .path()
+        .fill(list);
 
     val after = Instant.now();
 
-    log.info("Querying path(s) from '{}' to '{}' took {} ms",
-        fromNetElement, toNetElement, Duration.between(before, after).toMillis());
+    log.info(
+        "Querying path(s) from '{}' to '{}' took {} ms",
+        fromNetElement,
+        toNetElement,
+        Duration.between(before, after).toMillis());
 
     return list.stream().map(NetElementPath::new).collect(Collectors.toList());
   }
-
 }

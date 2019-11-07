@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/infrastructure/topology/")
 public class NetElementController {
-
   private final GraphService service;
 
   public NetElementController(GraphService service) {
@@ -24,5 +22,4 @@ public class NetElementController {
     val netElements = service.V().hasLabel("netElement");
     return netElements.toStream().map(NetElement::new).collect(Collectors.toList());
   }
-
 }

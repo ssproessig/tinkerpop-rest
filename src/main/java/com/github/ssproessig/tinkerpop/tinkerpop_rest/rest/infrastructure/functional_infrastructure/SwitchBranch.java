@@ -6,10 +6,8 @@ import lombok.val;
 import org.apache.tinkerpop.gremlin.structure.Direction;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
-
 @Data
 class SwitchBranch {
-
   enum Type {
     TIP,
     LEFT,
@@ -23,7 +21,12 @@ class SwitchBranch {
     branchType = type;
 
     val edgeLabel = type.toString().toLowerCase();
-    neighbour = v.edges(Direction.OUT, edgeLabel).next()
-        .inVertex().property(Constants.EXT_ID).value().toString();
+    neighbour =
+        v.edges(Direction.OUT, edgeLabel)
+            .next()
+            .inVertex()
+            .property(Constants.EXT_ID)
+            .value()
+            .toString();
   }
 }
