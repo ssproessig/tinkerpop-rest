@@ -1,0 +1,9 @@
+---
+applications:
+  - name: tinkerpop-rest
+    memory: 512MB
+    disk_quota: 256MB
+    instances: 1
+    path: target/tinkerpop_rest-0.0.1-SNAPSHOT.jar
+    env:
+      JAVA_OPTS: '-Xss250k -Xmx96M'
