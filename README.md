@@ -4,13 +4,7 @@ A sample implementation of
 - and providing a REST API to query the graph again. 
 
 ## API provided
-### Infrastructure/Topology
-- `GET  /infrastructure/topology/networks`  to get all networks and their levels; use optional request parameter `withResources` to see connected `networkResources` as well
-- `GET  /infrastructure/topology/net-elements`  to get all `netElements`
-- `GET  /infrastructure/topology/net-element-path`  to find all possible paths in the graph between `fromNetElement` and `toNetElement` 
-
-### Infrastructure/Functional Infrastructure
-- `GET /infrastructure/functional-infrastructure/switches`  to get all switches
+See Swagger UI opening the application in the browser. 
 
 ## Hints
 ### railML 3.1 used
