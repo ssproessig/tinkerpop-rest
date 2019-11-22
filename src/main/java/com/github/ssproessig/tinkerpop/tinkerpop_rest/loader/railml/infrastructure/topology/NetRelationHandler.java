@@ -36,8 +36,8 @@ public class NetRelationHandler extends BaseHandler {
 
       ctx.top.networkResources.put(extId, ctx.top.currentNetRelation);
     } else if (localName.startsWith("element") && ctx.top.currentNetRelation != null) {
-      val refToLookup =
-          attributes.getValue("ref") + "_" + ("elementA".equals(localName) ? "0" : "1");
+      val position = "elementA".equals(localName) ? ctx.top.positionOnA : ctx.top.positionOnB;
+      val refToLookup = attributes.getValue("ref") + "_" + position;
 
       ctx.top
           .lookupNetworkResource(refToLookup)
